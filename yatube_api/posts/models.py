@@ -11,9 +11,24 @@ class Post(models.Model):
         User, on_delete=models.CASCADE, related_name='posts')
     image = models.ImageField(
         upload_to='posts/', null=True, blank=True)
+    group = models.ForeignKey(
+        'Group', blank=True, null=True,
+        on_delete=models.SET_NULL,
+        related_name='posts',
+        verbose_name='Сообщество'
+    )
 
     def __str__(self):
         return self.text
+
+
+class Group(models.Model):
+    title = models.CharField('Название', max_length=200)
+    slug = models.SlugField('URL', unique=True, max_length=25)
+    description = models.CharField('Описание', max_length=500)
+
+    def __str__(self):
+        return self.slug
 
 
 class Comment(models.Model):
