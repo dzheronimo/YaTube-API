@@ -1,7 +1,6 @@
 from django.shortcuts import get_object_or_404
-from rest_framework.viewsets import ModelViewSet
-from rest_framework import permissions
-from rest_framework import filters
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework import filters, mixins, permissions
 
 from posts.models import Post, Group
 from .serializers import (PostSerializer, CommentSerializer,
@@ -43,7 +42,10 @@ class GroupViewSet(ModelViewSet):
     http_method_names = ['get', 'options', 'head']
 
 
-class FollowViewSet(ModelViewSet):
+class FollowViewSet(mixins.ListModelMixin,
+                    mixins.RetrieveModelMixin,
+                    mixins.CreateModelMixin,
+                    GenericViewSet):
     serializer_class = FollowSerializer
     permission_classes = [permissions.IsAuthenticated, ]
     filter_backends = (filters.SearchFilter, )
